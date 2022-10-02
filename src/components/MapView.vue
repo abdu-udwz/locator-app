@@ -4,9 +4,7 @@ import useStore from '../store';
 
 const { store } = useStore()
 
-const center = computed((): [number, number] => {
-  return store.matrix[store.currentBlock.row][store.currentBlock.col]
-})
+const center = computed(() => store.currentBlock.coordinates)
 
 const fullSource = computed(() => {
   let url = new URL('https://www.google.com/maps/embed/v1/view')
