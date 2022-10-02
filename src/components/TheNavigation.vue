@@ -4,6 +4,21 @@ import useStore from '../store'
 
 const { store, navUp, navRight, navDown, navLeft } = useStore()
 
+const highlightOptions = [
+{
+    value: 'NONE',
+    text: 'None',
+  },
+  {
+    value: 'FAVORITE',
+    text: 'Favorite'
+  },
+  {
+    value: 'IGNORED',
+    text: 'Ignored'
+  },
+]
+
 </script>
 
 <template>
@@ -30,11 +45,11 @@ const { store, navUp, navRight, navDown, navLeft } = useStore()
         </div>        
       </VCardText>
       <VCardSubtitle>
-        Block coordinates
+        Block index
       </VCardSubtitle>
       <VCardText class="d-flex">
           <VTextField 
-            v-model="store.currentBlock.row"
+            v-model="store.currentBlockIndex.row"
             label="Row"
             type="number"
             :min="0"
@@ -42,23 +57,50 @@ const { store, navUp, navRight, navDown, navLeft } = useStore()
           />
 
           <VTextField
-            v-model="store.currentBlock.col"
+            v-model="store.currentBlockIndex.col"
             label="Col"
             type="number"
             :min="0"
             :max="store.matrixCols - 1"
           ></VTextField>
       </VCardText>
-
-      <!-- zoom control -->
+      <VCardSubtitle>
+        Block details
+      </VCardSubtitle>
       <VCardText>
+        <VTable>
+          <tbody>
+            <tr>
+              <th>Latitude</th>
+              <td>{{ store.currentBlock.coordinates[0]}}</td>
+            </tr>
+            <tr>
+              <th>Longitude</th>
+              <td> {{ store.currentBlock.coordinates[1] }}</td>
+            </tr>
+          </tbody>
+        </VTable>
+        
+      </VCardText>
+
+      <VCardText>
+        <!-- highlight control -->
+        <VSelect
+          v-model="store.currentBlock.highlight"
+          :items="highlightOptions"
+          item-value="value"
+          item-title="text"
+          label="Highlight"
+          hint="Choose how to categorize this block"
+        />
+        <!-- zoom control -->
         <VTextField
-        v-model="store.zoom"
-        label="Zoom"
-        type="number"
-        prepend-inner-icon="mdi-magnify-plus"
-        max="20"
-        ></VTextField>
+          v-model="store.zoom"
+          label="Zoom"
+          type="number"
+          prepend-inner-icon="mdi-magnify-plus"
+          max="20"
+        />
       </VCardText>
 
       <VDivider />

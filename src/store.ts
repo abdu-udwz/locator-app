@@ -1,7 +1,6 @@
-import { reactive, computed } from 'vue'
+import { reactive, computed, watch } from 'vue'
 
-type CoordinatePair = [number, number]
-
+import type { CoordinatesPair, LocatorBlock } from './types'
 
 // stupidly measured but effective numbers ^_^
 // each pixel sums up to 0.000002538 coordinate unit at zoom level 19
@@ -20,40 +19,49 @@ const store = reactive({
   blockWidth: computed((): number => store.viewPort.width * mapToPixelRatio),
   blockHeight: computed((): number => store.viewPort.height * mapToPixelRatio),
 
-  currentBlock: {row: 0, col: 0},
+  currentBlockIndex: {row: 0, col: 0},
+  currentBlock: computed((): LocatorBlock => {
+    return store.matrix[store.currentBlockIndex.row][store.currentBlockIndex.col]
+  }),
 
   startPoint: ['32.32715235751756', '15.08581394993159'],
   endPoint: ['32.193612259300686', '15.138809048123479'],
 
-  matrix: computed((): CoordinatePair[][] =>  {
+  matrix: computed((): LocatorBlock[][] =>  {
     const parsedStartPoint = store.startPoint.map(parseFloat)
     const parsedEndPoint = store.endPoint.map(parseFloat)
 
-    const result: CoordinatePair[][] = []
+    const result: LocatorBlock[][] = []
     
     let currentRow =  parsedStartPoint[0]
     while (currentRow > parsedEndPoint[0]) {
-      const matrixRow: CoordinatePair[] = []
+      const blocksRow: LocatorBlock[] = []
 
       currentRow -= store.blockWidth
       let currentCol = parsedStartPoint[1]
       while (currentCol < parsedEndPoint[1]) {
         currentCol += store.blockHeight
-        matrixRow.push([currentRow, currentCol])
+        blocksRow.push({
+          coordinates: [currentRow, currentCol],
+          visited: false,
+          highlight: 'NONE',
+        })
       }
 
-      result.push(matrixRow)
+      result.push(blocksRow)
     }
-
-    // const rows = Math.round((store.startPoint[0] - store.endPoint[0]) / 10)
-
     return result
   }),
-
 
   matrixRows:  computed((): number => store.matrix.length),
 
   matrixCols:  computed((): number => store.matrix[0].length),
+})
+
+watch(() => store.currentBlockIndex, () => {
+  if (!store.currentBlock?.visited) {
+    store.currentBlock.visited = true
+  }
 })
 
 function updateCurrentBlock (row: number, col: number): void {
@@ -69,18 +77,18 @@ function updateCurrentBlock (row: number, col: number): void {
     col = store.matrix[0].length
   }
 
-  store.currentBlock = {row, col}
+  store.currentBlockIndex = {row, col}
 }
 
 function navUp() {
-  updateCurrentBlock(store.currentBlock.row - 1, store.currentBlock.col)
+  updateCurrentBlock(store.currentBlockIndex.row - 1, store.currentBlockIndex.col)
 }
 
 
 function navRight () {
-  let newCol = store.currentBlock.col +1
-  let newRow = store.currentBlock.row
-  if (store.currentBlock.col === store.matrixCols - 1) {
+  let newCol = store.currentBlockIndex.col +1
+  let newRow = store.currentBlockIndex.row
+  if (store.currentBlockIndex.col === store.matrixCols - 1) {
     newCol = 0
     newRow++
   }
@@ -89,13 +97,13 @@ function navRight () {
 }
 
 function navDown () {
-  updateCurrentBlock(store.currentBlock.row + 1, store.currentBlock.col)
+  updateCurrentBlock(store.currentBlockIndex.row + 1, store.currentBlockIndex.col)
 }
 
 function navLeft () {
-  let newCol = store.currentBlock.col - 1
-  let newRow = store.currentBlock.row
-  if (store.currentBlock.col === 0) {
+  let newCol = store.currentBlockIndex.col - 1
+  let newRow = store.currentBlockIndex.row
+  if (store.currentBlockIndex.col === 0) {
     newCol = store.matrixCols - 1
     newRow--
   }
@@ -111,6 +119,8 @@ export default function useStore () {
     navUp,
     navRight,
     navDown,
-    navLeft
+    navLeft,
+
+    updateCurrentBlock,
   }
 }
