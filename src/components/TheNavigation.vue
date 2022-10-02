@@ -52,6 +52,17 @@ const { store, navUp, navRight, navDown, navLeft } = useStore()
           ></VTextField>
       </VCardText>
 
+      <!-- zoom control -->
+      <VCardText>
+        <VTextField
+        v-model="store.zoom"
+        label="Zoom"
+        type="number"
+        prepend-inner-icon="mdi-magnify-plus"
+        max="20"
+        ></VTextField>
+      </VCardText>
+
       <VDivider />
 
       <!-- options -->
