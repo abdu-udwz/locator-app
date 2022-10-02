@@ -36,7 +36,10 @@ const store = reactive({
     return result
   }),
 
-  
+
+  matrixRows:  computed((): number => store.matrix.length),
+
+  matrixCols:  computed((): number => store.matrix[0].length),
 })
 
 function updateCurrentBlock (row: number, col: number): void {
@@ -61,7 +64,14 @@ function navUp() {
 
 
 function navRight () {
-  updateCurrentBlock(store.currentBlock.row, store.currentBlock.col +1)
+  let newCol = store.currentBlock.col +1
+  let newRow = store.currentBlock.row
+  if (store.currentBlock.col === store.matrixCols - 1) {
+    newCol = 0
+    newRow++
+  }
+
+  updateCurrentBlock(newRow, newCol)
 }
 
 function navDown () {
@@ -69,7 +79,14 @@ function navDown () {
 }
 
 function navLeft () {
-  updateCurrentBlock(store.currentBlock.row, store.currentBlock.col -1)
+  let newCol = store.currentBlock.col - 1
+  let newRow = store.currentBlock.row
+  if (store.currentBlock.col === 0) {
+    newCol = store.matrixCols - 1
+    newRow--
+  }
+  
+  updateCurrentBlock(newRow, newCol)
 }
 
 export default function useStore () {

@@ -4,9 +4,6 @@ import useStore from '../store'
 
 const { store, navUp, navRight, navDown, navLeft } = useStore()
 
-const matrixRows =  computed(() => store.matrix.length);
-const matrixCols =  computed(() => store.matrix[0].length);
-
 </script>
 
 <template>
@@ -17,7 +14,7 @@ const matrixCols =  computed(() => store.matrix[0].length);
     <VCard>
       <VCardTitle>Navigation</VCardTitle>
       <VCardSubtitle>
-        {{ matrixRows }} x {{ matrixCols }}
+        {{ store.matrixRows }} x {{ store.matrixCols }}
       </VCardSubtitle>
       <VCardText>
 
@@ -43,7 +40,7 @@ const matrixCols =  computed(() => store.matrix[0].length);
             label="Row"
             type="number"
             :min="0"
-            :max="matrixRows - 1"
+            :max="store.matrixRows - 1"
           />
 
           <VTextField
@@ -51,7 +48,7 @@ const matrixCols =  computed(() => store.matrix[0].length);
             label="Col"
             type="number"
             :min="0"
-            :max="matrixCols - 1"
+            :max="store.matrixCols - 1"
           ></VTextField>
       </VCardText>
 
