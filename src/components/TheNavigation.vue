@@ -16,9 +16,7 @@ const { store, navUp, navRight, navDown, navLeft } = useStore()
       <VCardSubtitle>
         {{ store.matrixRows }} x {{ store.matrixCols }}
       </VCardSubtitle>
-      <VCardText>
 
-      </VCardText>
       <VCardText>
         <div
          tag="section"
@@ -32,7 +30,7 @@ const { store, navUp, navRight, navDown, navLeft } = useStore()
         </div>        
       </VCardText>
       <VCardSubtitle>
-        Item
+        Block coordinates
       </VCardSubtitle>
       <VCardText class="d-flex">
           <VTextField 
