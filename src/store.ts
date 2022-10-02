@@ -2,29 +2,43 @@ import { reactive, computed } from 'vue'
 
 type CoordinatePair = [number, number]
 
-const ROW_LENGTH = 0.0025;
-const COL_LENGTH = 0.0025;
+
+// stupidly measured but effective numbers ^_^
+// each pixel sums up to 0.000002538 coordinate unit at zoom level 18
+//
+// TODO: make this ratio dynamic and take into account zoom levels other than 18
+const mapToPixelRatio = 0.000002538
 
 const store = reactive({
-  currentBlock: {row: 0, col: 0},
   zoom: 18,
 
-  startPoint: [32.32715235751756, 15.08581394993159],
-  endPoint: [32.193612259300686, 15.138809048123479],
+  viewPort: {
+    width: 100,
+    height: 100,
+  },
+
+  blockWidth: computed((): number => store.viewPort.width * mapToPixelRatio),
+  blockHeight: computed((): number => store.viewPort.height * mapToPixelRatio),
+
+  currentBlock: {row: 0, col: 0},
+
+  startPoint: ['32.32715235751756', '15.08581394993159'],
+  endPoint: ['32.193612259300686', '15.138809048123479'],
 
   matrix: computed((): CoordinatePair[][] =>  {
-    const result: CoordinatePair[][] = []
+    const parsedStartPoint = store.startPoint.map(parseFloat)
+    const parsedEndPoint = store.endPoint.map(parseFloat)
 
-    let currentRow = store.startPoint[0]
-    while (currentRow > store.endPoint[0]) {
-      
+    const result: CoordinatePair[][] = []
+    
+    let currentRow =  parsedStartPoint[0]
+    while (currentRow > parsedEndPoint[0]) {
       const matrixRow: CoordinatePair[] = []
 
-      currentRow -= ROW_LENGTH
-      let currentCol = store.startPoint[1]
-
-      while (currentCol < store.endPoint[1]) {
-        currentCol += COL_LENGTH
+      currentRow -= store.blockWidth
+      let currentCol = parsedStartPoint[1]
+      while (currentCol < parsedEndPoint[1]) {
+        currentCol += store.blockHeight
         matrixRow.push([currentRow, currentCol])
       }
 

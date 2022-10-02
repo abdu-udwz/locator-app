@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed, watchEffect, watch } from 'vue'
 import useStore from '../store';
 
 const { store } = useStore()
@@ -20,10 +20,19 @@ const fullSource = computed(() => {
   return url + '?' + params.toString()
 })
 
+const mapViewFrame = ref<HTMLIFrameElement | null>(null)
+watchEffect(() => {
+  if (mapViewFrame.value != null) {
+    store.viewPort.width = mapViewFrame.value.getBoundingClientRect().width
+    store.viewPort.height = mapViewFrame.value.getBoundingClientRect().height
+  }
+})
 </script>
 
 <template>
   <iframe
+    id="map-view"
+    ref="mapViewFrame"
     width="100%"
     height="100%"
     frameborder="0"
