@@ -4,13 +4,13 @@ type CoordinatePair = [number, number]
 
 
 // stupidly measured but effective numbers ^_^
-// each pixel sums up to 0.000002538 coordinate unit at zoom level 18
+// each pixel sums up to 0.000002538 coordinate unit at zoom level 19
 //
-// TODO: make this ratio dynamic and take into account zoom levels other than 18
+// TODO: make this ratio dynamic and take into account zoom levels other than 19
 const mapToPixelRatio = 0.000002538
 
 const store = reactive({
-  zoom: 18,
+  zoom: 19,
 
   viewPort: {
     width: 100,
