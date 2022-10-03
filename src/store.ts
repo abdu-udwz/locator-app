@@ -45,6 +45,7 @@ const store = reactive({
           coordinates: [currentRow, currentCol],
           visited: false,
           highlight: 'NONE',
+          note: '',
         })
       }
 

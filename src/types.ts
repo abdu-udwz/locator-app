@@ -6,4 +6,6 @@ export interface LocatorBlock {
 
   visited: boolean
   highlight: 'NONE' | 'FAVORITE' | 'IGNORED'
+
+  note: string
 }

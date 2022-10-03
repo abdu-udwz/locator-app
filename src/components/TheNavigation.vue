@@ -33,6 +33,15 @@ const highlightOptions = [
       </VCardSubtitle>
 
       <VCardText>
+        <!-- zoom control -->
+        <VTextField
+          v-model="store.zoom"
+          label="Zoom"
+          type="number"
+          prepend-inner-icon="mdi-magnify-plus"
+          max="20"
+        />
+
         <div
          tag="section"
          aria-label="Navigation joystick"
@@ -93,13 +102,12 @@ const highlightOptions = [
           label="Highlight"
           hint="Choose how to categorize this block"
         />
-        <!-- zoom control -->
-        <VTextField
-          v-model="store.zoom"
-          label="Zoom"
-          type="number"
-          prepend-inner-icon="mdi-magnify-plus"
-          max="20"
+
+        <VTextarea 
+          v-model="store.currentBlock.note"
+          label="Block notes"
+          rows="2"
+          auto-grow
         />
       </VCardText>
 
