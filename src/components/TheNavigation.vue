@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { toRef, onMounted } from 'vue'
 import useStore from '../store'
+import useMission from '../mission'
+import useNavigation from '../navigation'
 
-const { store, navUp, navRight, navDown, navLeft } = useStore()
+const { store } = useStore()
+
 
 const highlightOptions = [
 {
@@ -19,6 +22,24 @@ const highlightOptions = [
   },
 ]
 
+/*
+ * Mission
+ */
+const { 
+  missionStore, 
+  updateMissionsList,
+  showNewDialog: showNewMissionDialog
+ } = useMission()
+
+updateMissionsList()
+
+const { 
+  currentBlockIndex,
+  currentBlock,
+  matrixCols,
+  matrixRows,
+  navUp, navRight, navDown, navLeft } = useNavigation()
+
 </script>
 
 <template>
@@ -26,92 +47,90 @@ const highlightOptions = [
     permanent
     width="300"
   >
-    <VCard>
+    <VCard v-if="currentBlock != null">
       <VCardTitle>Navigation</VCardTitle>
-      <VCardSubtitle>
-        {{ store.matrixRows }} x {{ store.matrixCols }}
-      </VCardSubtitle>
+        <VCardSubtitle>
+          {{ matrixRows }} x {{ matrixCols }}
+        </VCardSubtitle>
 
-      <VCardText>
-        <!-- zoom control -->
-        <VTextField
-          v-model="store.zoom"
-          label="Zoom"
-          type="number"
-          prepend-inner-icon="mdi-magnify-plus"
-          max="20"
-        />
-
-        <div
-         tag="section"
-         aria-label="Navigation joystick"
-          class="joystick justify-center align-items-center mb-3"
-          >
-          <VBtn icon="mdi-arrow-up-bold" data-up @click="navUp"></VBtn>
-          <VBtn icon="mdi-arrow-left-bold" data-left @click="navLeft"></VBtn>
-          <VBtn icon="mdi-arrow-right-bold" data-right @click="navRight"></VBtn>
-          <VBtn icon="mdi-arrow-down-bold" data-down @click="navDown"></VBtn>
-        </div>        
-      </VCardText>
-      <VCardSubtitle>
-        Block index
-      </VCardSubtitle>
-      <VCardText class="d-flex">
-          <VTextField 
-            v-model="store.currentBlockIndex.row"
-            label="Row"
+        <VCardText>
+          <!-- zoom control -->
+          <VTextField
+            v-model="store.zoom"
+            label="Zoom"
             type="number"
-            :min="0"
-            :max="store.matrixRows - 1"
+            prepend-inner-icon="mdi-magnify-plus"
+            max="20"
           />
 
-          <VTextField
-            v-model="store.currentBlockIndex.col"
-            label="Col"
-            type="number"
-            :min="0"
-            :max="store.matrixCols - 1"
-          ></VTextField>
-      </VCardText>
-      <VCardSubtitle>
-        Block details
-      </VCardSubtitle>
-      <VCardText>
-        <VTable>
-          <tbody>
-            <tr>
-              <th>Latitude</th>
-              <td>{{ store.currentBlock.coordinates[0]}}</td>
-            </tr>
-            <tr>
-              <th>Longitude</th>
-              <td> {{ store.currentBlock.coordinates[1] }}</td>
-            </tr>
-          </tbody>
-        </VTable>
-        
-      </VCardText>
+          <div
+          tag="section"
+          aria-label="Navigation joystick"
+            class="joystick justify-center align-items-center mb-3"
+            >
+            <VBtn icon="mdi-arrow-up-bold" data-up @click="navUp"></VBtn>
+            <VBtn icon="mdi-arrow-left-bold" data-left @click="navLeft"></VBtn>
+            <VBtn icon="mdi-arrow-right-bold" data-right @click="navRight"></VBtn>
+            <VBtn icon="mdi-arrow-down-bold" data-down @click="navDown"></VBtn>
+          </div>
+        </VCardText>
+        <VCardSubtitle>
+          Block index
+        </VCardSubtitle>
+        <VCardText class="d-flex">
+            <VTextField
+              v-model="currentBlockIndex.row"
+              label="Row"
+              type="number"
+              :min="0"
+              :max="matrixRows - 1"
+            />
 
-      <VCardText>
-        <!-- highlight control -->
-        <VSelect
-          v-model="store.currentBlock.highlight"
-          :items="highlightOptions"
-          item-value="value"
-          item-title="text"
-          label="Highlight"
-          hint="Choose how to categorize this block"
-        />
+            <VTextField
+              v-model="currentBlockIndex.col"
+              label="Col"
+              type="number"
+              :min="0"
+              :max="matrixCols - 1"
+            ></VTextField>
+        </VCardText>
+        <VCardSubtitle>
+          Block details
+        </VCardSubtitle>
+        <VCardText>
+          <VTable>
+            <tbody>
+              <tr>
+                <th>Latitude</th>
+                <td>{{ currentBlock.coordinates[0]}}</td>
+              </tr>
+              <tr>
+                <th>Longitude</th>
+                <td> {{ currentBlock.coordinates[1] }}</td>
+              </tr>
+            </tbody>
+          </VTable>
+        </VCardText>
 
-        <VTextarea 
-          v-model="store.currentBlock.note"
-          label="Block notes"
-          rows="2"
-          auto-grow
-        />
-      </VCardText>
+        <VCardText>
+          <!-- highlight control -->
+          <VSelect
+            v-model="currentBlock.highlight"
+            :items="highlightOptions"
+            item-value="value"
+            item-title="text"
+            label="Highlight"
+            hint="Choose how to categorize this block"
+          />
 
-      <VDivider />
+          <VTextarea 
+            v-model="currentBlock.note"
+            label="Block notes"
+            rows="2"
+            auto-grow
+          />
+        </VCardText>
+    </VCard>
 
     <!-- mission -->
     <VCard>

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch } from 'vue'
+import { toRef, computed } from 'vue'
 import useStore from '../store';
+import useNavigation from '../navigation';
 
 const { store } = useStore()
-
-const center = computed(() => store.currentBlock.coordinates)
+const { currentBlock } = useNavigation()
+const center = computed(() => currentBlock.value?.coordinates ?? [0, 0])
 
 const fullSource = computed(() => {
   let url = new URL('https://www.google.com/maps/embed/v1/view')
@@ -18,27 +19,40 @@ const fullSource = computed(() => {
   return url + '?' + params.toString()
 })
 
-const mapViewFrame = ref<HTMLIFrameElement | null>(null)
-watchEffect(() => {
-  if (mapViewFrame.value != null) {
-    store.viewPort.width = mapViewFrame.value.getBoundingClientRect().width
-    store.viewPort.height = mapViewFrame.value.getBoundingClientRect().height
-  }
-})
+const mapViewFrame = toRef(store, 'mapViewFrame')
 </script>
 
 <template>
-  <iframe
-    id="map-view"
+  <div
     ref="mapViewFrame"
-    width="100%"
-    height="100%"
-    frameborder="0"
-    style="border: 0"
-    referrerpolicy="no-referrer-when-downgrade"
-    :src="fullSource"
-    allowfullscreen
-  ></iframe>
+    style="height: 100%; width: 100%"
+  >
+    <iframe
+      v-if="currentBlock != null"
+      id="map-view"
+      ref="mapViewFrame"
+      width="100%"
+      height="100%"
+      frameborder="0"
+      style="border: 0"
+      referrerpolicy="no-referrer-when-downgrade"
+      :src="fullSource"
+      allowfullscreen
+    ></iframe>
+    <VCard 
+      v-else
+      class="d-flex flex-column justify-center text-center"
+      width="100%"
+      height="100%"
+    >
+      <VCardTitle>
+        No data to display.
+      </VCardTitle>
+      <VCardSubtitle>
+        Please load a mission or start a new mission.
+      </VCardSubtitle>
+    </VCard>
+  </div>  
 </template>
 
 <style scoped>
