@@ -3,6 +3,7 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import MainView from './components/MapView.vue'
 import TheNavigation from './components/TheNavigation.vue';
+import MissionDialog from './components/MissionDialog.vue'
 </script>
 
 <template>
@@ -13,6 +14,8 @@ import TheNavigation from './components/TheNavigation.vue';
         <MainView 
         class="pa-2" 
         />
+
+        <MissionDialog />
     </VMain>
   </VApp>
 </template>

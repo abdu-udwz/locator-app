@@ -113,31 +113,26 @@ const highlightOptions = [
 
       <VDivider />
 
-      <!-- options -->
-      <VCardTitle>Options</VCardTitle>
-      <VCardSubtitle>Start point</VCardSubtitle>
-      <VCardText>        
-          <VTextField
-          v-model="store.startPoint[0]"
-          label="Lat"
-        ></VTextField>
-        <VTextField
-          v-model="store.startPoint[1]"
-          label="Lng"
-        ></VTextField>
-      </VCardText>
+    <!-- mission -->
+    <VCard>
+      <VCardTitle>Mission</VCardTitle>
 
-      <VCardSubtitle>End point</VCardSubtitle>
-        <VCardText>
-          <VTextField
-          v-model="store.endPoint[0]"
-          label="Lat"
-        ></VTextField>
-        <VTextField
-          v-model="store.endPoint[1]"
-          label="Lng"
-        ></VTextField>
-        </VCardText>
+      <VCardText>
+        <VSelect 
+          v-model="missionStore.missionKey"
+          :items="missionStore.missions"
+          item-value="id"
+          item-title="title"
+        />
+      </VCardText>
+      <VCardActions>
+        <VBtn
+          block
+          @click="showNewMissionDialog"
+        >
+          New mission
+        </VBtn>
+      </VCardActions>
     </VCard>
   </VNavigationDrawer>
 </template>
