@@ -123,3 +123,13 @@ export default function useMission () {
     updateMissionsList,
   }
 }
+
+/*
+ * a prototype, simple periodic auto save
+ */
+setInterval(() => {
+  if (missionStore.internalMissionKey) {
+    saveMission(missionStore.mission)
+    // console.info('[MissionState]: automatically stored changes (or no changes).')
+  }
+}, 15 * 1000)
