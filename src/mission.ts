@@ -84,7 +84,7 @@ function generateBlocksMatrix (
       blocksRow.push({
         coordinates: [currentRow, currentCol],
         visited: false,
-        highlight: 'NONE',
+        priority: 0,
         note: '',
       })
     }

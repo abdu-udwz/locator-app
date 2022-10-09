@@ -5,7 +5,7 @@ export interface LocatorBlock {
   coordinates: CoordinatesPair
 
   visited: boolean
-  highlight: 'NONE' | 'FAVORITE' | 'IGNORED'
+  priority: 0 | 1 | 2 | 3 | 4
 
   note: string
 }

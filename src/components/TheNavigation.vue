@@ -6,22 +6,6 @@ import useNavigation from '../navigation'
 
 const { store } = useStore()
 
-
-const highlightOptions = [
-{
-    value: 'NONE',
-    text: 'None',
-  },
-  {
-    value: 'FAVORITE',
-    text: 'Favorite'
-  },
-  {
-    value: 'IGNORED',
-    text: 'Ignored'
-  },
-]
-
 /*
  * Mission
  */
@@ -39,6 +23,14 @@ const {
   matrixCols,
   matrixRows,
   navUp, navRight, navDown, navLeft } = useNavigation()
+
+const priorityColors = [
+  undefined, 
+  'teal lighten-1',
+  'green lighten-1',
+  'amber', 
+  'deep-orange'
+]
 
 </script>
 
@@ -94,6 +86,34 @@ const {
               :max="matrixCols - 1"
             ></VTextField>
         </VCardText>
+        
+        <VCardSubtitle class="mt-n2">Block priority</VCardSubtitle>
+
+        <VCardText>
+          <!-- priority control -->
+          <VBtnToggle
+            v-model="currentBlock.priority"
+            variant="outlined"
+            mandatory
+            class="mb-6 w-100"
+          >
+            <VBtn 
+              v-for="i in 5"
+              :key="i"
+              :value="i - 1"
+              size="small"
+              :color="priorityColors[i - 1]"
+            > {{ i - 1 }}</VBtn>
+          </VBtnToggle>
+
+          <VTextarea 
+            v-model="currentBlock.note"
+            label="Block notes"
+            rows="2"
+            auto-grow
+          />
+        </VCardText>
+
         <VCardSubtitle>
           Block details
         </VCardSubtitle>
@@ -111,29 +131,11 @@ const {
             </tbody>
           </VTable>
         </VCardText>
-
-        <VCardText>
-          <!-- highlight control -->
-          <VSelect
-            v-model="currentBlock.highlight"
-            :items="highlightOptions"
-            item-value="value"
-            item-title="text"
-            label="Highlight"
-            hint="Choose how to categorize this block"
-          />
-
-          <VTextarea 
-            v-model="currentBlock.note"
-            label="Block notes"
-            rows="2"
-            auto-grow
-          />
-        </VCardText>
     </VCard>
 
     <!-- mission -->
     <VCard>
+      <VDivider />
       <VCardTitle>Mission</VCardTitle>
 
       <VCardText>
