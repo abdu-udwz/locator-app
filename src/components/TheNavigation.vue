@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { toRef, onMounted } from 'vue'
+import TheMinimap from './minimap/TheMinimap.vue'
+
 import useStore from '../store'
 import useMission from '../mission'
 import useNavigation from '../navigation'
+import useBlocksStyles from '../composables/blockStyles'
 
 const { store } = useStore()
 
@@ -24,13 +26,7 @@ const {
   matrixRows,
   navUp, navRight, navDown, navLeft } = useNavigation()
 
-const priorityColors = [
-  undefined, 
-  'teal lighten-1',
-  'green lighten-1',
-  'amber', 
-  'deep-orange'
-]
+const { priorityColors: blockPriorityColors } = useBlocksStyles()
 
 </script>
 
@@ -87,10 +83,9 @@ const priorityColors = [
             ></VTextField>
         </VCardText>
         
-        <VCardSubtitle class="mt-n2">Block priority</VCardSubtitle>
-
+        <!-- priority control -->
+        <VCardSubtitle>Block priority</VCardSubtitle>
         <VCardText>
-          <!-- priority control -->
           <VBtnToggle
             v-model="currentBlock.priority"
             variant="outlined"
@@ -102,10 +97,32 @@ const priorityColors = [
               :key="i"
               :value="i - 1"
               size="small"
-              :color="priorityColors[i - 1]"
+              :color="blockPriorityColors[i - 1]"
             > {{ i - 1 }}</VBtn>
           </VBtnToggle>
+        </VCardText>
 
+        <!-- Minimap -->
+        <VCardSubtitle>
+          Mission Minimap
+        </VCardSubtitle>
+        <VCardText>
+          <TheMinimap 
+            :block-size="40"
+            style="max-height: 200px;"
+          />
+        </VCardText>
+        <VCardActions>
+          <VBtn
+            class="mt-2"
+            block
+            @click="store.minimapDialog = true"
+          >
+            Enlarge Minimap
+          </VBtn>
+        </VCardActions>
+
+        <VCardText>
           <VTextarea 
             v-model="currentBlock.note"
             label="Block notes"
@@ -133,6 +150,7 @@ const priorityColors = [
         </VCardText>
     </VCard>
 
+    
     <!-- mission -->
     <VCard>
       <VDivider />

@@ -4,6 +4,7 @@
 import MainView from './components/MapView.vue'
 import TheNavigation from './components/TheNavigation.vue';
 import MissionDialog from './components/MissionDialog.vue'
+import MinimapDialog from './components/minimap/MinimapDialog.vue'
 </script>
 
 <template>
@@ -16,6 +17,7 @@ import MissionDialog from './components/MissionDialog.vue'
         />
 
         <MissionDialog />
+        <MinimapDialog />
     </VMain>
   </VApp>
 </template>
