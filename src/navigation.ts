@@ -84,6 +84,7 @@ export default function useNavigation() {
     navRight,
     navDown,
     navLeft,
+    updateCurrentBlock,
 }
 }
 
