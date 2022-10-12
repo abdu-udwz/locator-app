@@ -11,8 +11,14 @@ function genEmptyMission (): LocatorMission {
   return {
     title: `New mission ${Date.now()}`,
     matrix: [],
-    startPoint: ['32.32715235751756', '15.08581394993159'],
-    endPoint: ['32.193612259300686', '15.138809048123479'],
+    startPoint: [
+      import.meta.env.VITE_DEFAULT_AREA_START_LAT ?? '32.00', 
+      import.meta.env.VITE_DEFAULT_AREA_START_LNG ?? '15.00',
+    ],
+    endPoint: [
+      import.meta.env.VITE_DEFAULT_AREA_END_LAT ?? '32.1', 
+      import.meta.env.VITE_DEFAULT_AREA_END_LNG ?? '15.1'
+    ],
   
     currentBlockIndex: {row: 0, col:  0},
   }
