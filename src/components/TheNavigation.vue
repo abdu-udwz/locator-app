@@ -24,7 +24,16 @@ const {
   currentBlock,
   matrixCols,
   matrixRows,
-  navUp, navRight, navDown, navLeft } = useNavigation()
+  navUp, navRight, navDown, navLeft,
+  updateCurrentBlock
+} = useNavigation()
+
+function onIndexFieldUpdated(row: string | number, col: string | number): void {
+  updateCurrentBlock(
+    typeof row === 'number' ? row : parseFloat(row), 
+    typeof col === 'number' ? col : parseFloat(col)
+    )
+}
 
 const { priorityColors: blockPriorityColors } = useBlocksStyles()
 
@@ -52,8 +61,8 @@ const { priorityColors: blockPriorityColors } = useBlocksStyles()
           />
 
           <div
-          tag="section"
-          aria-label="Navigation joystick"
+            tag="section"
+            aria-label="Navigation joystick"
             class="joystick justify-center align-items-center mb-3"
             >
             <VBtn icon="mdi-arrow-up-bold" data-up @click="navUp"></VBtn>
@@ -67,11 +76,12 @@ const { priorityColors: blockPriorityColors } = useBlocksStyles()
         </VCardSubtitle>
         <VCardText class="d-flex">
             <VTextField
-              v-model="currentBlockIndex.row"
+              :model-value="currentBlockIndex.row"
               label="Row"
               type="number"
               :min="0"
               :max="matrixRows - 1"
+              @update:model-value="onIndexFieldUpdated($event, currentBlockIndex.col)"
             />
 
             <VTextField
@@ -80,6 +90,7 @@ const { priorityColors: blockPriorityColors } = useBlocksStyles()
               type="number"
               :min="0"
               :max="matrixCols - 1"
+              @update:model-value="onIndexFieldUpdated(currentBlockIndex.row, $event)"
             ></VTextField>
         </VCardText>
         

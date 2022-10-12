@@ -33,14 +33,14 @@ watch(() => mission.value.currentBlockIndex, () => {
 function updateCurrentBlock (row: number, col: number): void {
   if (row < 0) {
     row = 0
-  } else if (row > mission.value.matrix.length) {
-    row = mission.value.matrix.length
+  } else if (row > mission.value.matrix.length - 1) {
+    row = mission.value.matrix.length - 1
   }
 
   if (col < 0) {
     col = 0
-  } else if (col > mission.value.matrix[0].length) {
-    col = mission.value.matrix[0].length
+  } else if (col > mission.value.matrix[0].length - 1) {
+    col = mission.value.matrix[0].length - 1
   }
 
   mission.value.currentBlockIndex = {row, col}
