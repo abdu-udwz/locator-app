@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, toRef } from 'vue'
+import { ref, computed, toRef, watch } from 'vue'
+import useNavigation from '../../navigation'
 import useBlockStyles from '../../composables/blockStyles'
 // types
 import type  { LocatorBlock } from '.././../types'
@@ -29,6 +30,7 @@ const blockStyles = computed(() => {
     cursor: 'pointer'
   }
 })
+
 // auto-scroll feature
 const { currentBlockIndex } = useNavigation()
 
@@ -52,6 +54,9 @@ const { currentBlockIndex } = useNavigation()
   <VSheet
     v-for="(block, colIndex) of blocks"
     :key="colIndex"
+
+    :data-active-block="currentBlockIndex.row === index && currentBlockIndex.col === colIndex"
+    
     :color="priorityColors[block.priority]"
     :title="`${block.coordinates[0]}, ${block.coordinates[1]}`"
     
@@ -65,3 +70,10 @@ const { currentBlockIndex } = useNavigation()
   ></VSheet>
 </div>
 </template>
+
+<style scoped>
+[data-active-block="true"] {
+  outline: solid;
+  outline-offset: -2px;
+}
+</style>
