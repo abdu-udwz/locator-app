@@ -2,10 +2,9 @@ import { reactive, unref, computed } from 'vue'
 import type { LocatorBlock, LocatorMission  } from './types'
 
 // stupidly measured but effective numbers ^_^
-// each pixel sums up to 0.000002538 coordinate unit at zoom level 19
-//
 // TODO: make this ratio dynamic and take into account zoom levels other than 19
-const mapToPixelRatio = 0.000002538
+const lngToPixelRatio = 0.000002528
+const latToPixelRatio = 0.00000205
 
 function genEmptyMission (): LocatorMission {
   return {
@@ -74,8 +73,8 @@ function generateBlocksMatrix (
   const parsedStartPoint = area.startPoint.map(parseFloat)
   const parsedEndPoint = area.endPoint.map(parseFloat)
 
-  const blockWidth = viewportSize.width * mapToPixelRatio
-  const blockHeight = viewportSize.height * mapToPixelRatio
+  const blockWidth = viewportSize.width * lngToPixelRatio
+  const blockHeight = viewportSize.height * latToPixelRatio
 
   const matrix: LocatorBlock[][] = []
   
@@ -83,10 +82,10 @@ function generateBlocksMatrix (
   while (currentRow > parsedEndPoint[0]) {
     const blocksRow: LocatorBlock[] = []
 
-    currentRow -= blockWidth
+    currentRow -= blockHeight
     let currentCol = parsedStartPoint[1]
     while (currentCol < parsedEndPoint[1]) {
-      currentCol += blockHeight
+      currentCol += blockWidth
       blocksRow.push({
         coordinates: [currentRow, currentCol],
         visited: false,
