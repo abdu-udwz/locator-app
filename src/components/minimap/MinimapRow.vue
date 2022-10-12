@@ -29,6 +29,18 @@ const blockStyles = computed(() => {
     cursor: 'pointer'
   }
 })
+// auto-scroll feature
+const { currentBlockIndex } = useNavigation()
+
+// watch(currentBlockIndex, (value) => {
+//   const element = document.querySelector('[data-active-block="true"]') as HTMLDivElement | null
+//   if (element != null) {
+//     element.scrollIntoView({
+//       block: 'center'
+//     })
+//   }
+// }, { flush: 'post', deep: true})
+
 </script>
 
 <template>
